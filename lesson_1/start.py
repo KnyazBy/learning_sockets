@@ -1,15 +1,15 @@
 import socket
-import views as views
+import views as v
 
 
 URLS = {
-        '/': views.index,
-        '/blog': views.blog
+        '/': v.index,
+        '/blog': v.blog
         }
 
 
-def parse_request(request):
-    parsed = request.split(' ')
+def parse_reg(reg):
+    parsed = reg.split(' ')
     #print(parsed)
     method = parsed[0]
     #print(method)
@@ -18,7 +18,7 @@ def parse_request(request):
     return (method, url)
 
 
-def generate_headers(method, url):
+def gen_head(method, url):
     if not method == 'GET':
         return ('HTTP/1.1 405 Method not allowed\n\n', 405)
 
@@ -28,7 +28,7 @@ def generate_headers(method, url):
     return ('HTTP/1.1 200 Ok\n\n', 200)
 
 
-def generate_content(code, url):
+def gen_cont(code, url):
     if code == 404:
         return '<h1>404</h1><p>Not found</p>'
     if code == 405:
@@ -37,31 +37,31 @@ def generate_content(code, url):
     return URLS[url]()
 
 
-def generate_respons(request):
-    method, url = parse_request(request)
-    headers, code = generate_headers(method, url)
-    body = generate_content(code, url)
+def gen_res(reg):
+    method, url = parse_reg(reg)
+    headers, code = gen_head(method, url)
+    body = gen_cont(code, url)
     #return (headers + 'hello').encode('utf-8')
     return (headers + body).encode('utf-8')
 
-def run():
-    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    server_socket.bind(('localhost', 5000))
-    server_socket.listen()
+def run_serv():
+    ser_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    ser_sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    ser_sock.bind(('localhost', 5000))
+    ser_sock.listen()
 
     while True:
-       client_socket, addr =  server_socket.accept()
-       request = client_socket.recv(1024)
-       #print(request)#decode('UTF-8')
+       cl_sock, addr =  ser_sock.accept()
+       reg = cl_sock.recv(1024)
+       #print(reg)#decode('UTF-8')
        #print()
        print(addr)
        
-       response = generate_respons(request.decode('utf-8'))
-       client_socket.sendall(response)
-       client_socket.close()
+       res = gen_res(reg.decode('utf-8'))
+       cl_sock.sendall(res)
+       cl_sock.close()
 
 
 
 if __name__ == ('__main__'):
-    run()
+    run_serv()
