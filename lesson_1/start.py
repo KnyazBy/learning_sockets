@@ -1,5 +1,5 @@
 import socket
-import lesson_1.views as views
+import views as views
 
 
 URLS = {
