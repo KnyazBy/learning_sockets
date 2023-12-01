@@ -1,4 +1,3 @@
-есть ошибка - ищу решение
+Мои ошибки
 
-
-
+BrokenPipeError: [Errno 32] Broken pipe
