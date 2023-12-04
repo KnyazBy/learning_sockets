@@ -1,5 +1,3 @@
-
-
 # chat_server.py
  
 import sys

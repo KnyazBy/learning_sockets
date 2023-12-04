@@ -17,5 +17,5 @@ while True:
     print(str(data))
     conn.send(data.upper())  
     # в ответ клиенту отправляем сообщение в верхнем регистре
-conn.close() 
+    conn.close() 
 # закрываем соединение
